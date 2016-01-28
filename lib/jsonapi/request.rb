@@ -607,7 +607,13 @@ module JSONAPI
       @operations.push(operation_klass.send(:new, *operation_args))
     end
 
-    def parse_single_replace_operation(data, keys, id_key_presence_check_required: true)
+    # Ruby 1.9.3 compat change
+    #def parse_single_replace_operation(data, keys, id_key_presence_check_required: true)
+    def parse_single_replace_operation(data, keys, options = {})
+      # Ruby 1.9.3 compat change
+      id_key_presence_check_required = (options.has_key? :id_key_presence_check_required) ?
+        options[:id_key_presence_check_required] : true
+
       fail JSONAPI::Exceptions::MissingKey.new if data[:id].nil?
 
       type = data[:type]
